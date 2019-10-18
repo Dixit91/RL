@@ -1,5 +1,5 @@
 
-#########²ßÂÔµü´ú
+#########ç­–ç•¥è¿­ä»£
 import numpy as np
 import pprint
 import sys
@@ -24,16 +24,16 @@ def policy_eval(policy, env, discount_factor=1.0, theta=0.00001):
         theta: We stop evaluation once our value function change is less than theta for all states.
         discount_factor: Gamma discount factor.
     """
-    # V[s]³õÊ¼»¯Îª0ÏòÁ¿,VÏòÁ¿µÄÎ¬¶ÈÊÇ×´Ì¬¿Õ¼äµÄ´óĞ¡
+    # V[s]åˆå§‹åŒ–ä¸º0å‘é‡,Vå‘é‡çš„ç»´åº¦æ˜¯çŠ¶æ€ç©ºé—´çš„å¤§å°
     V = np.zeros(env.nS)
     while True:
         delta = 0
         # For each state, perform a "full backup"
         for s in range(env.nS):
             v = 0
-            # policy[s][a]¾ØÕóËæ»ú³õÊ¼»¯
+            # policy[s][a]çŸ©é˜µéšæœºåˆå§‹åŒ–
             for a, action_prob in enumerate(policy[s]):
-                # P[s][a]¾ØÕóÖĞ°üº¬:×ªÒÆ¸ÅÂÊ¡¢ÏÂÒ»¸ö×´Ì¬¡¢½±ÀøÖµ¡¢ÊÇ·ñÖÕ½á
+                # P[s][a]çŸ©é˜µä¸­åŒ…å«:è½¬ç§»æ¦‚ç‡ã€ä¸‹ä¸€ä¸ªçŠ¶æ€ã€å¥–åŠ±å€¼ã€æ˜¯å¦ç»ˆç»“
                 for  prob, next_state, reward, done in env.P[s][a]:
                     
                     v += action_prob * prob * (reward + discount_factor * V[next_state])
@@ -57,15 +57,15 @@ def policy_improvement(env, policy_eval_fn=policy_eval, discount_factor=1.0):
 
     def one_step_lookahead(state, V):
 
-		#A[a]ÏòÁ¿ÊÇ×´Ì¬Öµº¯ÊıQ,³õÊ¼»¯Îª0ÏòÁ¿
-		#Ã¿Ò»¸ö×´Ì¬ÏÂ,¶¼»áÎ¬³ÖÒ»¸öQÏòÁ¿,Î¬¶ÈÊÇ¶¯×÷¿Õ¼äµÄ´óĞ¡
+		#A[a]å‘é‡æ˜¯çŠ¶æ€å€¼å‡½æ•°Q,åˆå§‹åŒ–ä¸º0å‘é‡
+		#æ¯ä¸€ä¸ªçŠ¶æ€ä¸‹,éƒ½ä¼šç»´æŒä¸€ä¸ªQå‘é‡,ç»´åº¦æ˜¯åŠ¨ä½œç©ºé—´çš„å¤§å°
         A = np.zeros(env.nA)
         for a in range(env.nA):
             for prob, next_state, reward, done in env.P[state][a]:
                 A[a] += prob * (reward + discount_factor * V[next_state])
         return A
     
-    # policy[s][a]¾ØÕóËæ»ú³õÊ¼»¯£¬¾ØÕóÖĞµÄÖµ±íÊ¾ÔÚ×´Ì¬sÏÂ£¬Ö´ĞĞ¶¯×÷aµÄ¸ÅÂÊ
+    # policy[s][a]çŸ©é˜µéšæœºåˆå§‹åŒ–ï¼ŒçŸ©é˜µä¸­çš„å€¼è¡¨ç¤ºåœ¨çŠ¶æ€sä¸‹ï¼Œæ‰§è¡ŒåŠ¨ä½œaçš„æ¦‚ç‡
     policy = np.ones([env.nS, env.nA]) / env.nA
     
     while True:
@@ -77,10 +77,10 @@ def policy_improvement(env, policy_eval_fn=policy_eval, discount_factor=1.0):
         
         # For each state...
         for s in range(env.nS):
-            # ÔÚ²ßÂÔ¾ØÕóÖĞÑ¡ÔñÒ»¸ö×´Ì¬sÏÂ¸ÅÂÊ×î´óµÄ¶¯×÷
+            # åœ¨ç­–ç•¥çŸ©é˜µä¸­é€‰æ‹©ä¸€ä¸ªçŠ¶æ€sä¸‹æ¦‚ç‡æœ€å¤§çš„åŠ¨ä½œ
             chosen_a = np.argmax(policy[s])
             
-			#Ñ¡ÔñÒ»¸ö×´Ì¬sÏÂ,Ê¹µÃQÖµ×î´óµÄ¶¯×÷
+			#é€‰æ‹©ä¸€ä¸ªçŠ¶æ€sä¸‹,ä½¿å¾—Qå€¼æœ€å¤§çš„åŠ¨ä½œ
             action_values = one_step_lookahead(s, V)
             best_a = np.argmax(action_values)
             
@@ -114,7 +114,7 @@ print("")
 
 
 
-##################Öµµü´ú
+##################å€¼è¿­ä»£
 def value_iteration(env, theta=0.0001, discount_factor=1.0):
     
     def one_step_lookahead(state, V):
@@ -131,12 +131,12 @@ def value_iteration(env, theta=0.0001, discount_factor=1.0):
         delta = 0
         # Update each state...
         for s in range(env.nS):
-            # Ã¿¸ö×´Ì¬¶¼»áÉú³ÉÒ»¸öQÏòÁ¿,È¡×´Ì¬sÏÂ×î´óµÄQÖµ
+            # æ¯ä¸ªçŠ¶æ€éƒ½ä¼šç”Ÿæˆä¸€ä¸ªQå‘é‡,å–çŠ¶æ€sä¸‹æœ€å¤§çš„Qå€¼
             A = one_step_lookahead(s, V)
             best_action_value = np.max(A)
             # Calculate delta across all states seen so far
             delta = max(delta, np.abs(best_action_value - V[s]))
-            # bellman·½³Ì
+            # bellmanæ–¹ç¨‹
             V[s] = best_action_value        
         # Check if we can stop 
         if delta < theta:
